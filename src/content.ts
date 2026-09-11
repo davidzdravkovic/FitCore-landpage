@@ -2,105 +2,136 @@ export const CONTACT_EMAIL = 'hello@example.com'
 
 export const site = {
   name: 'FitCore',
-  tagline: 'For growing fitness companies ready for the next step',
+  tagline: 'Fitness operations software',
   hero: {
-    headline: 'Outgrowing spreadsheets?',
-    headlineAccent: 'Get operations that fit how you actually work.',
+    headline: 'Run the gym from one workspace',
     subhead:
-      'For small training and coaching companies that already know they need real software — or have tried a generic tool and hit its limits. Sessions, coaches, packages, and your rules — one platform built around your business.',
-    ctaPrimary: 'Get in touch',
-    ctaSecondary: 'See what we solve',
+      'Members, staff, memberships, schedules, and your house rules — one platform for growing training businesses that need operations they can trust.',
+    ctaPrimary: 'Request access',
+    ctaSecondary: 'See the product',
   },
-  forYou: {
-    title: 'Built for companies taking the next step',
+  productTabs: [
+    { id: 'owner', label: 'Owner' },
+    { id: 'staff', label: 'Staff' },
+    { id: 'member', label: 'Member' },
+  ] as const,
+  dayOne: {
+    title: 'Everything your team needs',
     subtitle:
-      'We focus on growing fitness businesses that need better operations now — not on companies that are not ready, and not on fighting your current platform for the sake of it.',
-    segments: [
+      'One system for the front desk, the coaches, and the people who walk through the door.',
+    items: [
       {
-        label: 'Primary',
-        title: 'You know you need software',
+        title: 'Member directory',
         description:
-          'WhatsApp, calendar, and sheets still run the day. Coaches are hard to schedule. Sessions get miscounted. You are ready to replace that with a real system.',
+          'Every client in one place — profiles, status, and history your team can actually use.',
       },
       {
-        label: 'Primary',
-        title: 'Generic software is not enough',
+        title: 'Staff & coaches',
         description:
-          'You already use a booking or gym app, but it will not bend to your workflows — cancellation rules, package logic, coach availability, how your team actually operates.',
+          'Give coaches and front-desk staff their own tools, without sharing the owner console.',
+      },
+      {
+        title: 'Business overview',
+        description:
+          'See what matters today: people, memberships, and the pulse of the floor.',
+      },
+      {
+        title: 'Member experience',
+        description:
+          'Members see their plan, book sessions, and check in — without calling the desk.',
+      },
+      {
+        title: 'Coach workspace',
+        description:
+          'Schedules, roster, and check-ins shaped for the people running the session.',
+      },
+      {
+        title: 'Your house rules',
+        description:
+          'Cancellation windows, package expiry, and policies that match how you already operate.',
       },
     ],
   },
-  problemsIntro: {
-    title: 'What breaks when you grow',
-    subtitle:
-      'These are the operational gaps that force the next step — whether you are still manual, or stuck in a tool that only covers part of the job.',
-  },
-  painPoints: [
+  deepFeatures: [
     {
-      title: 'Scale without chaos',
-      description:
-        'More coaches and clients should not mean more admin. Keep operations simple as the team grows.',
+      eyebrow: 'People',
+      title: 'Members and staff, under control',
+      body: 'Onboard clients and coaches into the right experience. Everyone sees what they need — owners run the business, staff run the day, members stay engaged.',
     },
     {
-      title: 'Control over the business',
-      description:
-        'See sessions, coaches, clients, and workload in one place — not scattered across chats and files.',
+      eyebrow: 'Memberships',
+      title: 'Plans that power the door',
+      body: 'Define what you sell, assign it to members, and keep status live. Front desk and coaches know who is allowed in — without a spreadsheet.',
     },
     {
-      title: 'Stop counting sessions by hand',
-      description:
-        'Completed sessions, remaining packages, and client history — always visible, never rebuilt in a spreadsheet.',
-    },
-    {
-      title: 'Coach schedules you can trust',
-      description:
-        'Bookings, free slots, reschedules, utilization, and who is available right now — without asking around.',
-    },
-    {
-      title: 'Packages with real expiration',
-      description:
-        'Your rules, automatic expiry, reminders — no chasing people when packages should already be closed.',
-    },
-    {
-      title: 'Fill slots with the right coach',
-      description:
-        'Assign new work by availability, location, and load — so growth does not mean guesswork.',
+      eyebrow: 'Operations',
+      title: 'Schedule and check-in, connected',
+      body: 'Bookings, attendance, and membership status work together so the floor stays calm when you grow.',
     },
   ],
-  cancellation: {
-    title: 'Late cancellations, handled by policy — not debate',
-    body: 'Especially in home-service training: clients push for free late cancels, while short-notice dropouts cost you a paid slot. Manual rules create conflict and lost revenue.',
-    solution:
-      'Set your notice window (for example 2–4 hours). If cancellation falls inside it and cannot be rebooked, the system applies your policy. Clear for the client, fair for the coach, predictable for the business.',
+  demo: {
+    title: 'See FitCore in motion',
+    body: 'Watch a short walkthrough of the owner workspace, coach tools, and member experience.',
+    cta: 'Request a live walkthrough',
   },
-  approach: {
-    title: 'Software that fits how you already work',
-    body: 'You get the essentials every training business needs — sessions, coaches, packages, scheduling — set up around your rules, not the other way around. No forcing your team into a generic gym app.',
-    points: [
-      'Your cancellation policy, packages, and coach flows — reflected in the system',
-      'Clear scope from the start so you know what you are getting',
-      'Built to make the switch feel manageable, not chaotic',
+  access: {
+    title: 'How you get started',
+    subtitle: 'We onboard each gym with you — so the workspace matches how you actually run.',
+    steps: [
+      {
+        n: '01',
+        title: 'Share how you operate',
+        body: 'Team size, memberships, scheduling, and the policies that matter on the floor.',
+      },
+      {
+        n: '02',
+        title: 'Your workspace goes live',
+        body: 'We stand up FitCore for your gym and walk you through the owner console.',
+      },
+      {
+        n: '03',
+        title: 'Bring in your team and members',
+        body: 'Invite coaches and clients. They join their own spaces and start using the product.',
+      },
     ],
   },
+  faq: [
+    {
+      q: 'How do I get FitCore?',
+      a: 'Request access and we set up your gym workspace with you. You invite your staff and members from inside the product.',
+    },
+    {
+      q: 'What does it cost?',
+      a: 'Pricing depends on how you run — team size and setup. Ask and we will give you a clear number for your gym.',
+    },
+    {
+      q: 'Who uses what?',
+      a: 'Owners manage the business. Staff run day-to-day operations. Members manage their membership, bookings, and visits in their own app experience.',
+    },
+    {
+      q: 'Is this another generic gym app?',
+      a: 'No. FitCore is built for operations that fit your rules — packages, cancellations, and coach workflows — not a one-size template you have to fight.',
+    },
+  ],
   cta: {
-    title: 'Ready for real operations?',
-    body: 'If your team has outgrown sheets — or outgrown a generic app that will not bend — tell us how you run sessions today. We will tell you straight whether this is a fit, and what would be tailored for you.',
-    button: 'Email us',
+    title: 'Bring your operations into one workspace',
+    body: 'Tell us how you run today. If FitCore is a fit, we get your gym live with you.',
+    button: 'Request access',
   },
-  footer: 'Fitness operations software for growing companies · Shared core + custom fit',
+  footer: 'FitCore · Fitness operations for growing companies',
 }
 
 export const strategy = {
   keyBenefit:
-    'Operational software for growing fitness companies taking the next step — from manual tools or incomplete generic apps to a core that fits their workflows.',
+    'Operational software for growing fitness companies — members, staff, memberships, and floor ops in one product.',
   customers:
-    'Small / growing PT, coaching, and related fitness operators who already feel the need for better software, or who use generic tools that lack personalization.',
+    'Small / growing PT, coaching, and related fitness operators who need better software than sheets or rigid generic apps.',
   whatTheyWant:
-    'A reliable next-step system: sessions, coaches, packages, cancellations — with calm communication and real product quality to reduce switching anxiety.',
+    'A finished-feeling operations platform: people, memberships, scheduling, check-ins, and policies that match reality.',
   whereToFindThem:
-    'Operators who already complain about WhatsApp/sheets or about inflexible generic gym software; industry networks; warm intros.',
+    'Operators frustrated with WhatsApp/sheets or inflexible gym software; industry networks; warm intros.',
   howToTalkToday:
-    'Landing speaks to both primary segments; research decides which cohort is denser for outreach. Soften education-only and full-platform-replacement pitches for now.',
+    'Landing speaks like the product is complete. Sales still starts with request access and assisted onboarding.',
   primarySegments: [
     'Knows they need software (still mostly manual)',
     'Uses generic software lacking personalization / completion',
