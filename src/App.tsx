@@ -46,25 +46,119 @@ function Nav() {
   )
 }
 
-const SCHEDULE_SHOT = `${import.meta.env.BASE_URL}fitcore-schedule.png`
+const SCHEDULE_SLIDES = [
+  {
+    id: 'coaches',
+    src: `${import.meta.env.BASE_URL}fitcore-schedule-coaches.png`,
+    label: 'Day · all coaches',
+    alt: 'FitCore day schedule with multiple coaches and their visits side by side',
+  },
+  {
+    id: 'month',
+    src: `${import.meta.env.BASE_URL}fitcore-schedule-month.png`,
+    label: 'Month view',
+    alt: 'FitCore month schedule showing visits across the calendar',
+  },
+] as const
 
-function ScheduleScreenshot({ caption }: { caption: string }) {
+function ScheduleSlider() {
+  const [index, setIndex] = useState(0)
+  const slide = SCHEDULE_SLIDES[index]
+  const count = SCHEDULE_SLIDES.length
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) return
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % count)
+    }, 5500)
+    return () => window.clearInterval(id)
+  }, [count])
+
+  const go = (next: number) => {
+    setIndex((next + count) % count)
+  }
+
   return (
     <figure className="overflow-hidden rounded-sm border border-ink/20 bg-ink shadow-[4px_4px_0_0_rgba(12,35,64,0.12)]">
-      <div className="flex items-center gap-2 border-b border-white/10 bg-ink/90 px-4 py-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-ink/90 px-4 py-2">
         <span className="font-mono text-[10px] uppercase tracking-wider text-white/55">
-          {caption}
+          fitcore · schedule
         </span>
+        <div
+          className="inline-flex gap-1 rounded-sm border border-white/15 p-1"
+          role="tablist"
+          aria-label="Schedule views"
+        >
+          {SCHEDULE_SLIDES.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={i === index}
+              onClick={() => setIndex(i)}
+              className={`rounded-sm px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition ${
+                i === index
+                  ? 'bg-brand-500 text-ink'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
-      <img
-        src={SCHEDULE_SHOT}
-        alt="FitCore schedule calendar showing coaches, visits, and the day plan"
-        width={1600}
-        height={1000}
-        className="block h-auto w-full"
-        loading="lazy"
-        decoding="async"
-      />
+
+      <div className="relative">
+        <img
+          key={slide.id}
+          src={slide.src}
+          alt={slide.alt}
+          width={1600}
+          height={1000}
+          className="anim-fade-up block h-auto w-full"
+          loading={index === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+
+        <div className="pointer-events-none absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2 md:px-3">
+          <button
+            type="button"
+            aria-label="Previous schedule view"
+            onClick={() => go(index - 1)}
+            className="pointer-events-auto rounded-sm border border-white/20 bg-ink/70 px-2 py-2 text-white/80 transition hover:bg-ink hover:text-white"
+          >
+            <span className="font-mono text-sm" aria-hidden>
+              ←
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-label="Next schedule view"
+            onClick={() => go(index + 1)}
+            className="pointer-events-auto rounded-sm border border-white/20 bg-ink/70 px-2 py-2 text-white/80 transition hover:bg-ink hover:text-white"
+          >
+            <span className="font-mono text-sm" aria-hidden>
+              →
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-ink/90 py-2.5">
+        {SCHEDULE_SLIDES.map((item, i) => (
+          <button
+            key={item.id}
+            type="button"
+            aria-label={`Show ${item.label}`}
+            aria-current={i === index ? 'true' : undefined}
+            onClick={() => setIndex(i)}
+            className={`h-1.5 rounded-full transition ${
+              i === index ? 'w-6 bg-brand-500' : 'w-1.5 bg-white/30 hover:bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
     </figure>
   )
 }
@@ -105,9 +199,9 @@ function Hero() {
 
         <div id="product" className="anim-fade-up-delay mt-14 md:mt-16">
           <div className="mb-4">
-            <Spec>Schedule · main calendar</Spec>
+            <Spec>Schedule · day and month</Spec>
           </div>
-          <ScheduleScreenshot caption="fitcore · schedule" />
+          <ScheduleSlider />
         </div>
       </div>
     </section>
