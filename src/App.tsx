@@ -1,45 +1,43 @@
-import { useEffect, useId, useState } from 'react'
-import {
-  ArrowRight,
-  BadgeCheck,
-  Building2,
-  CalendarCheck,
-  ChevronDown,
-  IdCard,
-  Mail,
-  Play,
-  Shield,
-  Users,
-  UserRound,
-} from 'lucide-react'
+import { useEffect, useId, useState, type ReactNode } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { CONTACT_EMAIL, site } from './content'
+
+const PILOT_MAIL = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('FitCore pilot access')}`
+
+function Spec({ children }: { children: ReactNode }) {
+  return (
+    <p className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-ink-subtle">
+      {children}
+    </p>
+  )
+}
 
 function Nav() {
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-surface-border/70 bg-surface/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-        <a href="#" className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold tracking-tight text-white">
-            FC
+    <header className="fixed top-0 z-50 w-full border-b border-ink/20 bg-surface/95">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3.5">
+        <a href="#" className="flex items-baseline gap-2">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-subtle">
+            Ops
           </span>
-          <span className="font-semibold tracking-tight text-white">
+          <span className="text-lg font-semibold tracking-tight text-ink">
             {site.name}
           </span>
         </a>
-        <nav className="hidden items-center gap-8 text-sm text-slate-400 md:flex">
-          <a href="#product" className="transition hover:text-white">
-            Product
-          </a>
-          <a href="#access" className="transition hover:text-white">
-            Get started
-          </a>
-          <a href="#faq" className="transition hover:text-white">
-            FAQ
-          </a>
+        <nav className="hidden items-center gap-8 text-sm text-ink-muted md:flex">
+          {site.nav.links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="transition hover:text-ink"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
         <a
           href="#contact"
-          className="rounded-full bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-500"
+          className="rounded-sm bg-brand-500 px-4 py-2 text-sm font-semibold text-ink transition hover:bg-brand-400"
         >
           {site.hero.ctaPrimary}
         </a>
@@ -48,196 +46,160 @@ function Nav() {
   )
 }
 
-function ProductPreview({ active }: { active: (typeof site.productTabs)[number]['id'] }) {
-  if (active === 'staff') {
-    return (
-      <div className="flex h-full flex-col justify-between p-6 md:p-8">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-brand-400">
-            Staff
-          </p>
-          <h3 className="mt-2 font-display text-3xl text-white md:text-4xl">
-            Coach day view
-          </h3>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-            Schedules, roster, and check-ins for the people running the floor —
-            without touching the owner console.
-          </p>
-        </div>
-        <div className="mt-8 space-y-3">
-          {['Morning block · Studio A', 'PT · Alex M.', 'Open check-in desk'].map(
-            (row) => (
-              <div
-                key={row}
-                className="flex items-center justify-between border-b border-surface-border/80 py-3 last:border-0"
-              >
-                <span className="text-sm text-slate-300">{row}</span>
-                <span className="text-xs text-slate-500">Today</span>
-              </div>
-            ),
-          )}
-        </div>
-      </div>
-    )
-  }
+const SCHEDULE_SHOT = `${import.meta.env.BASE_URL}fitcore-schedule.png`
 
-  if (active === 'member') {
-    return (
-      <div className="flex h-full flex-col justify-between p-6 md:p-8">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-brand-400">
-            Member
-          </p>
-          <h3 className="mt-2 font-display text-3xl text-white md:text-4xl">
-            Your membership
-          </h3>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-            Plan status, bookings, and visits — so members stay informed without
-            messaging the desk.
-          </p>
-        </div>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          {[
-            { k: 'Plan', v: 'Unlimited Monthly' },
-            { k: 'Status', v: 'Active' },
-            { k: 'Visits left', v: 'Open' },
-            { k: 'Next visit', v: 'Book in app' },
-          ].map((item) => (
-            <div key={item.k} className="border-t border-surface-border pt-3">
-              <p className="text-xs text-slate-500">{item.k}</p>
-              <p className="mt-1 text-sm font-medium text-white">{item.v}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
+function ScheduleScreenshot({ caption }: { caption: string }) {
   return (
-    <div className="grid h-full min-h-[280px] grid-cols-[7.5rem_1fr] md:grid-cols-[11rem_1fr]">
-      <aside className="border-r border-surface-border bg-surface/80 p-4 md:p-5">
-        <p className="font-display text-lg text-white">FitCore</p>
-        <p className="mt-1 truncate text-xs text-slate-500">Northside Athletics</p>
-        <ul className="mt-6 space-y-1 text-sm">
-          {['Overview', 'Members', 'Staff', 'Memberships', 'Check-ins'].map(
-            (item, i) => (
-              <li
-                key={item}
-                className={`rounded-md px-2.5 py-2 ${
-                  i === 1
-                    ? 'bg-brand-600/15 font-medium text-brand-400'
-                    : 'text-slate-500'
-                }`}
-              >
-                {item}
-              </li>
-            ),
-          )}
-        </ul>
-      </aside>
-      <div className="flex flex-col p-4 md:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs text-slate-500">Owner · Members</p>
-            <p className="mt-1 text-lg font-semibold text-white">People</p>
-          </div>
-          <span className="rounded-full bg-brand-600 px-3 py-1.5 text-xs font-medium text-white">
-            Invite member
-          </span>
-        </div>
-        <div className="mt-5 space-y-2">
-          {[
-            { name: 'Mia Petrov', meta: 'Unlimited · Active' },
-            { name: 'Jonas Berg', meta: '10-pack · 4 left' },
-            { name: 'Elena Ruiz', meta: 'Unlimited · Active' },
-          ].map((row) => (
-            <div
-              key={row.name}
-              className="flex items-center justify-between border-b border-surface-border/70 py-3 last:border-0"
-            >
-              <div>
-                <p className="text-sm font-medium text-white">{row.name}</p>
-                <p className="text-xs text-slate-500">{row.meta}</p>
-              </div>
-              <span className="text-xs text-slate-500">View</span>
-            </div>
-          ))}
-        </div>
+    <figure className="overflow-hidden rounded-sm border border-ink/20 bg-ink shadow-[4px_4px_0_0_rgba(12,35,64,0.12)]">
+      <div className="flex items-center gap-2 border-b border-white/10 bg-ink/90 px-4 py-2">
+        <span className="font-mono text-[10px] uppercase tracking-wider text-white/55">
+          {caption}
+        </span>
       </div>
-    </div>
+      <img
+        src={SCHEDULE_SHOT}
+        alt="FitCore schedule calendar showing coaches, visits, and the day plan"
+        width={1600}
+        height={1000}
+        className="block h-auto w-full"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
   )
 }
 
 function Hero() {
-  const [tab, setTab] = useState<(typeof site.productTabs)[number]['id']>('owner')
-
   return (
-    <section className="relative overflow-hidden pt-28 md:pt-32">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(16,185,129,0.18),transparent)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(30,42,54,0.35)_1px,transparent_1px),linear-gradient(90deg,rgba(30,42,54,0.35)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]" />
-
-      <div className="relative mx-auto max-w-6xl px-6">
+    <section className="pt-28 md:pt-32">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="anim-fade-up max-w-3xl">
-          <p className="text-sm font-medium tracking-wide text-brand-400">
-            {site.name}
-          </p>
-          <h1 className="mt-4 font-display text-5xl leading-[1.05] tracking-tight text-white md:text-6xl lg:text-7xl">
+          <div className="inline-flex items-center gap-3 border border-ink/15 bg-surface px-3 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
+            <Spec>{site.hero.eyebrow}</Spec>
+          </div>
+          <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight text-ink md:text-5xl lg:text-[3.5rem]">
             {site.hero.headline}
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-400">
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-muted">
             {site.hero.subhead}
+          </p>
+          <p className="mt-4 max-w-2xl border-l-2 border-brand-500 pl-4 text-base leading-relaxed text-ink">
+            {site.hero.recognition}
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-600 px-6 py-3 font-medium text-white transition hover:bg-brand-500"
+              className="inline-flex items-center rounded-sm bg-brand-500 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-brand-400"
             >
               {site.hero.ctaPrimary}
-              <ArrowRight className="h-4 w-4" />
             </a>
             <a
-              href="#product"
-              className="inline-flex items-center gap-2 rounded-full border border-surface-border px-6 py-3 font-medium text-slate-300 transition hover:border-slate-500 hover:text-white"
+              href="#scope"
+              className="inline-flex items-center rounded-sm border border-ink/25 bg-surface px-5 py-3 text-sm font-medium text-ink transition hover:border-ink/50"
             >
               {site.hero.ctaSecondary}
             </a>
           </div>
         </div>
 
-        <div
-          id="product"
-          className="anim-fade-up-delay relative mt-14 md:mt-16"
-        >
-          <div className="overflow-hidden rounded-t-2xl border border-surface-border border-b-0 bg-surface-raised shadow-[0_-20px_80px_-20px_rgba(16,185,129,0.25)]">
-            <div className="flex items-center justify-between gap-3 border-b border-surface-border px-4 py-3 md:px-5">
-              <div className="flex gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
-                <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
-                <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
-              </div>
-              <div className="flex gap-1 rounded-full bg-surface p-1">
-                {site.productTabs.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setTab(item.id)}
-                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition md:px-4 ${
-                      tab === item.id
-                        ? 'bg-brand-600 text-white'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-              <span className="hidden text-xs text-slate-600 sm:inline">
-                product
-              </span>
-            </div>
-            <div className="min-h-[300px] bg-surface md:min-h-[340px]">
-              <ProductPreview active={tab} />
-            </div>
+        <div id="product" className="anim-fade-up-delay mt-14 md:mt-16">
+          <div className="mb-4">
+            <Spec>Schedule · main calendar</Spec>
+          </div>
+          <ScheduleScreenshot caption="fitcore · schedule" />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Delivery() {
+  return (
+    <section
+      id="delivery"
+      className="py-[clamp(4.5rem,10vw,8.75rem)]"
+    >
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="max-w-2xl">
+          <Spec>{site.delivery.eyebrow}</Spec>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            {site.delivery.title}
+          </h2>
+          <p className="mt-4 text-lg font-medium leading-relaxed text-ink">
+            {site.delivery.subtitle}
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-ink-muted">
+            {site.delivery.body}
+          </p>
+          <ul className="mt-8 max-w-md space-y-0 border-y border-ink/15">
+            {site.delivery.focuses.map((item) => (
+              <li
+                key={item}
+                className="flex items-center gap-3 border-b border-ink/10 py-3 last:border-0"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
+                <span className="font-mono text-sm uppercase tracking-wider text-ink">
+                  {item}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Pain() {
+  return (
+    <section
+      id="why"
+      className="border-y border-ink/15 bg-surface/80 py-[clamp(4.5rem,10vw,8.75rem)]"
+    >
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="max-w-2xl">
+          <Spec>{site.pain.eyebrow}</Spec>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            {site.pain.title}
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-ink-muted">
+            {site.pain.subtitle}
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-sm border border-ink/15 bg-canvas/60 p-8 md:p-10">
+            <h3 className="text-xl font-semibold text-ink">
+              {site.pain.beforeTitle}
+            </h3>
+            <ul className="mt-6 space-y-3">
+              {site.pain.beforeItems.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-3 text-sm leading-relaxed text-ink-muted"
+                >
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink-subtle" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-sm border border-ink bg-ink p-8 text-canvas md:p-10">
+            <h3 className="text-xl font-semibold text-canvas">
+              {site.pain.afterTitle}
+            </h3>
+            <ul className="mt-6 space-y-3">
+              {site.pain.afterItems.map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-3 text-sm leading-relaxed text-canvas/80"
+                >
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-brand-500" />
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
@@ -245,118 +207,59 @@ function Hero() {
   )
 }
 
-const dayOneIcons = [Users, IdCard, Building2, UserRound, BadgeCheck, Shield]
-
-function DayOne() {
+function Scope() {
   return (
-    <section className="border-t border-surface-border py-20 md:py-28">
+    <section
+      id="scope"
+      className="py-[clamp(4.5rem,10vw,8.75rem)]"
+    >
       <div className="mx-auto max-w-6xl px-6">
         <div className="max-w-2xl">
-          <h2 className="font-display text-4xl text-white md:text-5xl">
-            {site.dayOne.title}
+          <Spec>{site.scope.eyebrow}</Spec>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            {site.scope.title}
           </h2>
-          <p className="mt-4 text-lg text-slate-400">{site.dayOne.subtitle}</p>
+          <p className="mt-4 text-lg leading-relaxed text-ink-muted">
+            {site.scope.subtitle}
+          </p>
         </div>
-        <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {site.dayOne.items.map((item, i) => {
-            const Icon = dayOneIcons[i] ?? CheckIcon
-            return (
-              <article key={item.title} className="group">
-                <div className="mb-4 text-brand-400 transition group-hover:text-brand-500">
-                  <Icon className="h-6 w-6" strokeWidth={1.6} />
-                </div>
-                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+
+        <div className="mt-12 max-w-3xl overflow-hidden rounded-sm border border-ink/15 bg-surface">
+          <div className="border-b border-ink/15 bg-canvas/70 px-5 py-3">
+            <Spec>{site.scope.includedTitle}</Spec>
+          </div>
+          <div>
+            {site.scope.included.map((item) => (
+              <article
+                key={item.title}
+                className="grid gap-1 border-b border-ink/10 px-5 py-5 last:border-0 sm:grid-cols-[11rem_1fr] sm:gap-6"
+              >
+                <h4 className="font-mono text-xs font-semibold uppercase tracking-wider text-ink">
+                  {item.title}
+                </h4>
+                <p className="text-sm leading-relaxed text-ink-muted">
                   {item.description}
                 </p>
               </article>
-            )
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </section>
   )
 }
 
-function CheckIcon(props: { className?: string; strokeWidth?: number }) {
-  return <CalendarCheck {...props} />
-}
-
-function DeepFeatures() {
+function Roles() {
   return (
-    <section className="border-t border-surface-border py-20 md:py-28">
-      <div className="mx-auto max-w-6xl space-y-20 px-6 md:space-y-28">
-        {site.deepFeatures.map((feature, index) => (
-          <div
-            key={feature.title}
-            className={`grid items-center gap-10 lg:grid-cols-2 lg:gap-16 ${
-              index % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''
-            }`}
-          >
-            <div>
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-brand-400">
-                {feature.eyebrow}
-              </p>
-              <h2 className="mt-3 font-display text-3xl text-white md:text-5xl">
-                {feature.title}
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-slate-400 md:text-lg">
-                {feature.body}
-              </p>
-            </div>
-            <div className="relative overflow-hidden rounded-2xl border border-surface-border bg-surface-raised">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.12),transparent_55%)]" />
-              <div className="relative space-y-4 p-8 md:p-10">
-                {[0, 1, 2].map((line) => (
-                  <div
-                    key={line}
-                    className="h-3 rounded-full bg-surface-border/80"
-                    style={{ width: `${88 - line * 18}%` }}
-                  />
-                ))}
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  <div className="h-24 rounded-xl border border-surface-border bg-surface/60" />
-                  <div className="h-24 rounded-xl border border-brand-600/30 bg-brand-600/10" />
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-function DemoSlot() {
-  return (
-    <section id="demo" className="border-t border-surface-border py-20 md:py-28">
+    <section className="border-y border-ink/15 bg-surface/80 py-[clamp(4.5rem,10vw,8.75rem)]">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <h2 className="font-display text-4xl text-white md:text-5xl">
-              {site.demo.title}
-            </h2>
-            <p className="mt-4 max-w-xl text-lg text-slate-400">{site.demo.body}</p>
-            <a
-              href={`mailto:${CONTACT_EMAIL}?subject=FitCore%20walkthrough`}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-brand-400 transition hover:text-brand-500"
-            >
-              {site.demo.cta}
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-          <a
-            href={`mailto:${CONTACT_EMAIL}?subject=FitCore%20walkthrough`}
-            className="relative aspect-video overflow-hidden rounded-2xl border border-surface-border bg-surface-raised transition hover:border-brand-600/40"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.14),transparent_60%)]" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full border border-surface-border bg-surface/80 text-brand-400">
-                <Play className="h-6 w-6 fill-current" />
-              </span>
-              <p className="text-sm text-slate-300">Watch the walkthrough</p>
-            </div>
-          </a>
+        <div className="max-w-2xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            {site.roles.title}
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-ink-muted">
+            {site.roles.subtitle}
+          </p>
         </div>
       </div>
     </section>
@@ -365,20 +268,28 @@ function DemoSlot() {
 
 function Access() {
   return (
-    <section id="access" className="border-t border-surface-border py-20 md:py-28">
+    <section
+      id="access"
+      className="py-[clamp(4.5rem,10vw,8.75rem)]"
+    >
       <div className="mx-auto max-w-6xl px-6">
         <div className="max-w-2xl">
-          <h2 className="font-display text-4xl text-white md:text-5xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">
             {site.access.title}
           </h2>
-          <p className="mt-4 text-lg text-slate-400">{site.access.subtitle}</p>
+          <p className="mt-4 text-lg leading-relaxed text-ink-muted">
+            {site.access.subtitle}
+          </p>
         </div>
-        <ol className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
+        <ol className="mt-12 grid gap-4 md:grid-cols-3">
           {site.access.steps.map((step) => (
-            <li key={step.n} className="relative">
-              <p className="font-display text-4xl text-brand-400/80">{step.n}</p>
-              <h3 className="mt-4 text-xl font-semibold text-white">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+            <li
+              key={step.n}
+              className="rounded-sm border border-ink/15 bg-surface p-6 shadow-[3px_3px_0_0_rgba(12,35,64,0.08)]"
+            >
+              <p className="font-mono text-sm text-brand-600">{step.n}</p>
+              <h3 className="mt-3 text-xl font-semibold text-ink">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
                 {step.body}
               </p>
             </li>
@@ -394,7 +305,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const panelId = useId()
 
   return (
-    <div className="border-b border-surface-border">
+    <div className="border-b border-ink/15">
       <button
         type="button"
         aria-expanded={open}
@@ -402,10 +313,10 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between gap-4 py-5 text-left"
       >
-        <span className="text-base font-medium text-white md:text-lg">{q}</span>
+        <span className="text-base font-semibold text-ink md:text-lg">{q}</span>
         <ChevronDown
-          className={`h-5 w-5 shrink-0 text-slate-500 transition ${
-            open ? 'rotate-180 text-brand-400' : ''
+          className={`h-5 w-5 shrink-0 text-ink-subtle transition ${
+            open ? 'rotate-180 text-ink' : ''
           }`}
         />
       </button>
@@ -416,7 +327,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         }`}
       >
         <div className="overflow-hidden">
-          <p className="pb-5 text-sm leading-relaxed text-slate-400 md:text-base">
+          <p className="pb-5 text-sm leading-relaxed text-ink-muted md:text-base">
             {a}
           </p>
         </div>
@@ -427,13 +338,16 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 function Faq() {
   return (
-    <section id="faq" className="border-t border-surface-border py-20 md:py-28">
+    <section
+      id="faq"
+      className="border-t border-ink/15 bg-surface/80 py-[clamp(4.5rem,10vw,8.75rem)]"
+    >
       <div className="mx-auto max-w-6xl px-6">
-        <h2 className="font-display text-4xl text-white md:text-5xl">
-          Straight answers
+        <h2 className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+          {site.faq.title}
         </h2>
-        <div className="mt-10 max-w-3xl">
-          {site.faq.map((item) => (
+        <div className="mt-10 max-w-3xl border-t border-ink/15">
+          {site.faq.items.map((item) => (
             <FaqItem key={item.q} q={item.q} a={item.a} />
           ))}
         </div>
@@ -444,21 +358,22 @@ function Faq() {
 
 function Contact() {
   return (
-    <section id="contact" className="border-t border-surface-border py-20 md:py-28">
+    <section id="contact" className="py-[clamp(4.5rem,10vw,8.75rem)]">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="relative overflow-hidden rounded-[1.75rem] border border-brand-600/25 bg-gradient-to-br from-brand-600/15 via-surface-raised to-surface px-8 py-12 md:px-14 md:py-16">
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-500/10 blur-3xl" />
-          <h2 className="relative max-w-2xl font-display text-4xl text-white md:text-5xl">
+        <div className="rounded-sm border border-ink bg-ink px-8 py-12 text-canvas md:px-14 md:py-16">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-brand-400">
+            Next step
+          </p>
+          <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-canvas md:text-4xl">
             {site.cta.title}
           </h2>
-          <p className="relative mt-4 max-w-xl text-lg text-slate-300">
+          <p className="mt-4 max-w-xl text-lg leading-relaxed text-canvas/70">
             {site.cta.body}
           </p>
           <a
-            href={`mailto:${CONTACT_EMAIL}?subject=FitCore%20access%20request`}
-            className="relative mt-8 inline-flex items-center gap-2 rounded-full bg-brand-600 px-8 py-4 text-base font-medium text-white transition hover:bg-brand-500"
+            href={PILOT_MAIL}
+            className="mt-8 inline-flex min-h-11 items-center rounded-sm bg-brand-500 px-6 py-3 text-sm font-semibold text-ink transition hover:bg-brand-400"
           >
-            <Mail className="h-5 w-5" />
             {site.cta.button}
           </a>
         </div>
@@ -469,12 +384,14 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="border-t border-surface-border py-8">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 text-sm text-slate-500 md:flex-row">
-        <span>{site.footer}</span>
+    <footer className="border-t border-ink/20 py-6">
+      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-6 text-sm text-ink-subtle md:flex-row md:items-center">
+        <span className="font-mono text-[11px] uppercase tracking-wider">
+          {site.footer}
+        </span>
         <a
           href={`mailto:${CONTACT_EMAIL}`}
-          className="transition hover:text-slate-300"
+          className="font-mono text-[11px] text-ink hover:underline"
         >
           {CONTACT_EMAIL}
         </a>
@@ -493,9 +410,10 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <DayOne />
-        <DeepFeatures />
-        <DemoSlot />
+        <Delivery />
+        <Pain />
+        <Scope />
+        <Roles />
         <Access />
         <Faq />
         <Contact />
