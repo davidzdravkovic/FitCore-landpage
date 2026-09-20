@@ -63,7 +63,6 @@ const SCHEDULE_SLIDES = [
 
 function ScheduleSlider() {
   const [index, setIndex] = useState(0)
-  const slide = SCHEDULE_SLIDES[index]
   const count = SCHEDULE_SLIDES.length
 
   useEffect(() => {
@@ -71,7 +70,7 @@ function ScheduleSlider() {
     if (reduced) return
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % count)
-    }, 5500)
+    }, 9000)
     return () => window.clearInterval(id)
   }, [count])
 
@@ -97,7 +96,7 @@ function ScheduleSlider() {
               role="tab"
               aria-selected={i === index}
               onClick={() => setIndex(i)}
-              className={`rounded-sm px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition ${
+              className={`rounded-sm px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors duration-500 ${
                 i === index
                   ? 'bg-brand-500 text-ink'
                   : 'text-white/60 hover:text-white'
@@ -110,16 +109,21 @@ function ScheduleSlider() {
       </div>
 
       <div className="relative">
-        <img
-          key={slide.id}
-          src={slide.src}
-          alt={slide.alt}
-          width={1600}
-          height={1000}
-          className="anim-fade-up block h-auto w-full"
-          loading={index === 0 ? 'eager' : 'lazy'}
-          decoding="async"
-        />
+        {SCHEDULE_SLIDES.map((item, i) => (
+          <img
+            key={item.id}
+            src={item.src}
+            alt={item.alt}
+            width={1600}
+            height={1000}
+            className={`schedule-slide block h-auto w-full ${
+              i === 0 ? 'relative' : 'absolute inset-0'
+            } ${i === index ? 'is-active' : ''}`}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            aria-hidden={i === index ? undefined : true}
+          />
+        ))}
 
         <div className="pointer-events-none absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2 md:px-3">
           <button
@@ -153,7 +157,7 @@ function ScheduleSlider() {
             aria-label={`Show ${item.label}`}
             aria-current={i === index ? 'true' : undefined}
             onClick={() => setIndex(i)}
-            className={`h-1.5 rounded-full transition ${
+            className={`h-1.5 rounded-full transition-all duration-700 ease-out ${
               i === index ? 'w-6 bg-brand-500' : 'w-1.5 bg-white/30 hover:bg-white/50'
             }`}
           />

@@ -66,6 +66,28 @@ body {
   .motion-ready .anim-fade-up-delay {
     animation: fade-up 0.7s ease-out 0.1s both;
   }
+
+  .schedule-slide {
+    opacity: 0;
+    transition: opacity 1.4s ease-in-out;
+    pointer-events: none;
+  }
+
+  .schedule-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schedule-slide {
+    opacity: 0;
+  }
+
+  .schedule-slide.is-active {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-up {
