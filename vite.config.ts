@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// GitHub Pages serves at https://<user>.github.io/FitCore-landpage/
+// Served at https://fitcore-landing.astibosoft.com/
 export default defineConfig({
-  base: '/FitCore-landpage/',
+  base: '/',
   plugins: [react(), tailwindcss()],
 })
